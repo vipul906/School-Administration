@@ -119,10 +119,10 @@ USE_TZ = True
 STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = f'static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'project-static', 'dist'),
-    os.path.join(BASE_DIR, 'project-static', 'img'),
-    os.path.join(BASE_DIR, 'project-static', 'js'),
-    ('docs', os.path.join(BASE_DIR, 'project-static', 'docs')),  # Prefix with /docs
+    # os.path.join(BASE_DIR, 'project-static', 'dist'),
+    # os.path.join(BASE_DIR, 'project-static', 'img'),
+    # os.path.join(BASE_DIR, 'project-static', 'js'),
+    # ('docs', os.path.join(BASE_DIR, 'project-static', 'docs')),  # Prefix with /docs
 )
 
 
