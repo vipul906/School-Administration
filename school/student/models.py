@@ -3,9 +3,9 @@ from django.utils.translation import gettext_lazy as _
 
 
 class GENDER_CHOICES(models.TextChoices):
-    MALE = "male"
-    FEMALE = "female"
-    NOT_SPECIFIED = "not_specified"
+    MALE = 'male'
+    FEMALE = 'female'
+    NOT_SPECIFIED = 'not_specified'
 
 
 class ChangeLoggingMixin(models.Model):
@@ -13,16 +13,15 @@ class ChangeLoggingMixin(models.Model):
     Provides change logging support for a model. Adds the `created` and `last_updated` fields.
     """
 
-    created = models.DateTimeField(verbose_name=_("created"), auto_now_add=True, blank=True, null=True)
+    created = models.DateTimeField(verbose_name=_('created'), auto_now_add=True, blank=True, null=True)
 
-    last_updated = models.DateTimeField(verbose_name=_("last updated"), auto_now=True, blank=True, null=True)
+    last_updated = models.DateTimeField(verbose_name=_('last updated'), auto_now=True, blank=True, null=True)
 
     class Meta:
         abstract = True
 
 
 class AbstractCustomer(ChangeLoggingMixin):
-
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     email = models.EmailField(max_length=150)
@@ -35,7 +34,7 @@ class AbstractCustomer(ChangeLoggingMixin):
         """
         Return the first_name plus the last_name, with a space in between.
         """
-        full_name = "%s %s" % (self.first_name, self.last_name)
+        full_name = f"{self.first_name} {self.last_name}"
         return full_name.strip()
 
     def __str__(self) -> str:
@@ -52,7 +51,7 @@ class Parent(AbstractCustomer):
 
 
 class Student(AbstractCustomer):
-    parent = models.ForeignKey(Parent, related_name="students", on_delete=models.CASCADE)
+    parent = models.ForeignKey(Parent, related_name='students', on_delete=models.CASCADE)
 
     @property
     def total_fee(self):
@@ -60,7 +59,7 @@ class Student(AbstractCustomer):
 
 
 class StudentFee(ChangeLoggingMixin):
-    student = models.OneToOneField(Student, related_name="fee", on_delete=models.CASCADE)
+    student = models.OneToOneField(Student, related_name='fee', on_delete=models.CASCADE)
     monthly_fee = models.PositiveIntegerField()
     exam_fee = models.PositiveIntegerField()
     transportation_fee = models.PositiveIntegerField()

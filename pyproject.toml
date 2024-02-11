@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 120
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py311']
 include = '\.pyi?$'
 
 [tool.isort]
@@ -19,3 +19,6 @@ ignore = ['F401']
 
 [tool.djlint]
 profile = "django"
+
+[tool.autopep8]
+max-line-length = 120

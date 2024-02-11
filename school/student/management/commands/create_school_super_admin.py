@@ -8,9 +8,9 @@ from django.db import IntegrityError
 class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> str | None:
         try:
-            User.objects.create_superuser(username="admin", email="admin@gmail.com", password="admin")
-            print("admin is created")
+            User.objects.create_superuser(username='admin', email='admin@gmail.com', password='admin')
+            print('admin is created')
         except IntegrityError:
-            print("User is already created")
+            print('User is already created')
         except Exception as ex:
             print(f"Error: {ex}")

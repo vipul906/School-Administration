@@ -16,17 +16,17 @@ class ParentAdmin(admin.ModelAdmin):
     inlines = [
         StudentInline,
     ]
-    list_display = ["id", "first_name", "last_name", "email", "children_count"]
-    search_fields = ["first_name", "last_name"]
+    list_display = ['id', 'first_name', 'last_name', 'email', 'children_count']
+    search_fields = ['first_name', 'last_name']
 
 
 class StudentAdmin(admin.ModelAdmin):
     inlines = [StudentFeeInline]
-    list_display = ["id", "first_name", "last_name", "email", "total_fee"]
+    list_display = ['id', 'first_name', 'last_name', 'email', 'total_fee']
 
 
 class StudentFeeAdmin(admin.ModelAdmin):
-    list_display = ["id", "student", "total_amount", "recieved_amount", "is_paid"]
+    list_display = ['id', 'student', 'total_amount', 'recieved_amount', 'is_paid']
 
 
 # Register your models here.

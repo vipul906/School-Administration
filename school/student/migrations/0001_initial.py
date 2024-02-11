@@ -8,8 +8,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
@@ -21,7 +20,13 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(max_length=150)),
                 ('last_name', models.CharField(max_length=150)),
                 ('email', models.EmailField(max_length=150)),
-                ('gender', models.CharField(choices=[('male', 'Male'), ('female', 'Female'), ('not_specified', 'Not Specified')], max_length=50)),
+                (
+                    'gender',
+                    models.CharField(
+                        choices=[('male', 'Male'), ('female', 'Female'), ('not_specified', 'Not Specified')],
+                        max_length=50,
+                    ),
+                ),
                 ('address', models.CharField(max_length=150)),
             ],
             options={
@@ -37,8 +42,19 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(max_length=150)),
                 ('last_name', models.CharField(max_length=150)),
                 ('email', models.EmailField(max_length=150)),
-                ('gender', models.CharField(choices=[('male', 'Male'), ('female', 'Female'), ('not_specified', 'Not Specified')], max_length=50)),
-                ('parent', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='students', to='student.parent')),
+                (
+                    'gender',
+                    models.CharField(
+                        choices=[('male', 'Male'), ('female', 'Female'), ('not_specified', 'Not Specified')],
+                        max_length=50,
+                    ),
+                ),
+                (
+                    'parent',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name='students', to='student.parent'
+                    ),
+                ),
             ],
             options={
                 'abstract': False,
@@ -53,7 +69,12 @@ class Migration(migrations.Migration):
                 ('monthly_fee', models.PositiveIntegerField()),
                 ('exam_fee', models.PositiveIntegerField()),
                 ('transportation_fee', models.PositiveIntegerField()),
-                ('student', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='fee', to='student.student')),
+                (
+                    'student',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE, related_name='fee', to='student.student'
+                    ),
+                ),
             ],
             options={
                 'abstract': False,
