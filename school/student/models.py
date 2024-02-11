@@ -1,7 +1,5 @@
-import enum
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import User
 
 
 class GENDER_CHOICES(models.TextChoices):
@@ -9,26 +7,19 @@ class GENDER_CHOICES(models.TextChoices):
     FEMALE = "female"
     NOT_SPECIFIED = "not_specified"
 
+
 class ChangeLoggingMixin(models.Model):
     """
     Provides change logging support for a model. Adds the `created` and `last_updated` fields.
     """
-    created = models.DateTimeField(
-        verbose_name=_('created'),
-        auto_now_add=True,
-        blank=True,
-        null=True
-    )
 
-    last_updated = models.DateTimeField(
-        verbose_name=_('last updated'),
-        auto_now=True,
-        blank=True,
-        null=True
-    )
+    created = models.DateTimeField(verbose_name=_("created"), auto_now_add=True, blank=True, null=True)
+
+    last_updated = models.DateTimeField(verbose_name=_("last updated"), auto_now=True, blank=True, null=True)
 
     class Meta:
         abstract = True
+
 
 class AbstractCustomer(ChangeLoggingMixin):
 
@@ -49,13 +40,16 @@ class AbstractCustomer(ChangeLoggingMixin):
 
     def __str__(self) -> str:
         return self.get_full_name()
-    
+
+
 class Parent(AbstractCustomer):
     address = models.CharField(max_length=150)
+    phone_number = models.CharField(max_length=10)
 
     @property
     def children_count(self):
         return self.students.all().count()
+
 
 class Student(AbstractCustomer):
     parent = models.ForeignKey(Parent, related_name="students", on_delete=models.CASCADE)
@@ -64,11 +58,14 @@ class Student(AbstractCustomer):
     def total_fee(self):
         return self.fee.total_amount
 
+
 class StudentFee(ChangeLoggingMixin):
     student = models.OneToOneField(Student, related_name="fee", on_delete=models.CASCADE)
     monthly_fee = models.PositiveIntegerField()
     exam_fee = models.PositiveIntegerField()
     transportation_fee = models.PositiveIntegerField()
+    is_paid = models.BooleanField(default=False)
+    recieved_amount = models.PositiveIntegerField()
 
     @property
     def total_amount(self):
@@ -77,6 +74,11 @@ class StudentFee(ChangeLoggingMixin):
         """
         total_amount = self.monthly_fee + self.exam_fee + self.transportation_fee
         return total_amount
-    
+
     def __str__(self) -> str:
         return str(self.student)
+
+    def save(self, *args, **kwargs):
+        if self.recieved_amount == self.total_amount:
+            self.is_paid = True
+        return super().save(args, kwargs)
