@@ -3,8 +3,8 @@
 {% block object-tools-items %}
 
 <li>
-    <a href="{% url 'excel_import' %}?{{ request.GET.urlencode }}" class="addlink">Import Excel</a>
+    <a href="{% url 'admin:excel_import' %}?{{ request.GET.urlencode }}" class="addlink">Import Excel</a>
 </li>
 
 {{ block.super }}
-{% endblock object-tools-item %}
+{% endblock object-tools-items %}

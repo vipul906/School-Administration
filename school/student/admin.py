@@ -51,8 +51,8 @@ class StudentFeeAdmin(admin.ModelAdmin):
 
     def get_urls(self) -> list[URLPattern]:
         urls = super().get_urls()
-        import_excel_url = path('import/', self.import_excel, name='excel_import')
-        urls.append(import_excel_url)
+        custon_urls = [path('import/', self.import_excel, name='excel_import')]
+        urls = custon_urls + urls
         return urls
 
     def import_excel(self, request, *args, **kwargs):
