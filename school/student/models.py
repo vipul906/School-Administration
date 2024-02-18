@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, RegexValidator
 from django.db import models
 from django.utils.dates import MONTHS
 from django.utils.translation import gettext_lazy as _
@@ -93,15 +94,15 @@ class Student(AbstractCustomer):
     parent = models.ForeignKey(Parent, related_name='students', on_delete=models.CASCADE)
     level = models.CharField(choices=CLASS_LEVEL, max_length=10, null=True, blank=True)
     section = models.CharField(choices=CLASS_SECTION, max_length=1, null=True, blank=True)
-    discount = models.PositiveIntegerField(default=0)
+    discount = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     last_paid = models.DateField(null=True, blank=True)
 
 
 class StudentFee(ChangeLoggingMixin):
     student = models.ForeignKey(Student, related_name='fee', on_delete=models.CASCADE)
-    monthly_fee = models.PositiveIntegerField()
-    exam_fee = models.PositiveIntegerField()
-    transportation_fee = models.PositiveIntegerField()
+    monthly_fee = models.PositiveIntegerField(default=0)
+    exam_fee = models.PositiveIntegerField(default=0)
+    transportation_fee = models.PositiveIntegerField(default=0)
     is_paid = models.BooleanField(default=False)
     recieved_amount = models.PositiveIntegerField(default=0)
     comment = models.CharField(max_length=200, null=True, blank=True)
@@ -126,8 +127,22 @@ class StudentFee(ChangeLoggingMixin):
 
 
 class FeeStructure(ChangeLoggingMixin):
-    monthly_fee = models.PositiveIntegerField()
-    exam_fee = models.PositiveIntegerField()
-    transportation_fee = models.PositiveIntegerField()
+    monthly_fee = models.PositiveIntegerField(default=0)
+    exam_fee = models.PositiveIntegerField(default=0)
+    transportation_fee = models.PositiveIntegerField(default=0)
     level = models.CharField(choices=CLASS_LEVEL, max_length=10, null=True, blank=True)
-    session = models.PositiveIntegerField()
+    annual_session = models.CharField(
+        blank=True,
+        null=True,
+        max_length=9,
+        validators=[
+            RegexValidator(
+                regex=r'[0-9]{4}-[0-9]{4}',
+                message='Enter a valid session in the format 2023-2024',
+                code='invalid_registration',
+            )
+        ],
+    )
+
+    def __str__(self) -> str:
+        return self.annual_session

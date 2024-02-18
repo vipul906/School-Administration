@@ -6,7 +6,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import path
 from django.urls.resolvers import URLPattern
 from student.filtersets import StudentFeeFilter
-from student.models import Parent, Student, StudentFee
+from student.models import FeeStructure, Parent, Student, StudentFee
 
 
 class StudentInline(admin.TabularInline):
@@ -38,16 +38,28 @@ class ParentAdmin(admin.ModelAdmin):
 
 class StudentAdmin(admin.ModelAdmin):
     inlines = [StudentFeeInline]
-    # search_fields = ['first_name', 'last_name']
-    list_display = ['full_name', 'email']
-    list_filter = ['first_name', 'last_name']
+    search_fields = ['first_name', 'last_name']
+    list_display = ['full_name', 'email', 'level', 'section', 'discount', 'last_paid']
+    list_filter = [
+        'first_name',
+        'last_name',
+        'level',
+        'section',
+        'discount',
+    ]
 
 
 class StudentFeeAdmin(admin.ModelAdmin):
+    actions = ['bulk_add_fee']
+
+    @admin.action(description='Mark selected stories as published')
+    def bulk_add_fee(self, request, queryse):
+        pass
+
     change_list_template = 'admin/import_unpaid_student_list.html'
     search_fields = ['student__first_name', 'student__last_name']
-    list_display = ['id', 'student', 'total_amount', 'recieved_amount', 'is_paid']
-    list_filter = ['is_paid']
+    list_display = ['id', 'student', 'total_amount', 'recieved_amount', 'is_paid', 'month', 'year']
+    list_filter = ['is_paid', 'year', 'month']
 
     def get_urls(self) -> list[URLPattern]:
         urls = super().get_urls()
@@ -85,6 +97,10 @@ class StudentFeeAdmin(admin.ModelAdmin):
         return response
 
 
+class FeeStructureAdmin(admin.ModelAdmin):
+    list_display = ['level', 'annual_session']
+
+
 # Register your models here.
 admin.site.register(Parent, ParentAdmin)
 admin.site.register(Student, StudentAdmin)
@@ -92,6 +108,7 @@ admin.site.register(
     StudentFee,
     StudentFeeAdmin,
 )
+admin.site.register(FeeStructure, FeeStructureAdmin)
 
 # # UnRegister your models here.
 # admin.site.unregister(Group)
